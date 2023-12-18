@@ -15,10 +15,12 @@
                 }
 
                 attributeChangedCallback(property, oldValue, newValue){
+                    console.log(property, oldValue, newValue);
                     if (oldValue === newValue) { 
                         return;
                     }
                     this[property] = newValue;
+                    this.connectedCallback();
                 }
 
                 connectedCallback() {
