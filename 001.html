@@ -3,8 +3,25 @@
     <head>
         <script type="text/javascript">
             class HelloWorld extends HTMLElement {
+
+                constructor() { 
+                    super();
+                    this.name = "World";
+                }
+
+                static get observedAttributes() {
+                    return ['name'];
+                }
+
+                attributeChangedCallback(property, oldValue, newValue){
+                    if (oldValue === newValue) { 
+                        return;
+                    }
+                    this[property] = newValue;
+                }
+
                 connectedCallback() {
-                    this.textContent = "Hello World!";
+                    this.textContent = `Hello ${this.name}!`;
                 }
             }
 
@@ -17,6 +34,6 @@
         </style>
     </head>
     <body>
-        <hello-world />
+        <hello-world name="Dave" />
     </body>
 </html>
