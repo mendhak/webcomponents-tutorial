@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <script>
+            class HelloWorld extends HTMLElement
+            {
+                constructor() {
+                    super();
+                    this.name = "World";
+                }
+
+                static get observedAttributes(){
+                    return ['name'];
+                }
+
+                attributeChangedCallback(property, oldValue, newValue){
+                    if (oldValue === newValue){
+                        return;
+                    }
+                    this[property] = newValue;
+                }
+
+                connectedCallback(){
+                    const shadow = this.attachShadow({mode: 'closed'});
+                    const template = document.getElementById('hello-world').content.cloneNode(true);
+                    const hwMsg = `Hello ${this.name}!`;
+
+                    Array.from(template.querySelectorAll('.hw-test')).forEach(n=>n.textContent = hwMsg);
+                    shadow.append(template);
+                }
+            }
+
+            customElements.define('hello-world', HelloWorld);
+        </script>
+
+        <template id="hello-world">
+            <style>
+                p { 
+                    text-align: center;
+                    font-weight: normal;
+                    padding: 0.5em;
+                    margin: 1px 0;
+                    background-color: #eee;
+                    border: 1px solid #666;
+                    font-weight: bolder;
+                }
+            </style>
+            <p class="hw-test"></p>
+            <p class="hw-test"></p>
+            <p class="hw-test"></p>
+        </template>
+
+        <style>
+            hello-world {
+                color: red;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <hello-world name="John" />
+    </body>
+</html>
