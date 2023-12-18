@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+    </head>
+    <body>
+
+        <template id="hello-world">
+            <style>
+                slot[name="msgtext"] { color: rgb(22, 75, 22); }
+            </style>
+            <slot name="msgtext" class="hw-text"></slot>
+            <slot></slot>
+        </template>
+        
+        <hello-world name="Craig">
+            <h1 slot="msgtext">Hello Default!</h1>
+            <p>This text will become part of the component.</p>
+        </hello-world>
+
+
+        <script>
+            class HelloWorld extends HTMLElement
+            {
+                constructor() {
+                    super();
+                    this.name = "World";
+                }
+
+                static get observedAttributes(){
+                    return ['name'];
+                }
+
+                attributeChangedCallback(property, oldValue, newValue){
+                    if (oldValue === newValue){
+                        return;
+                    }
+                    this[property] = newValue;
+                }
+
+                connectedCallback(){
+                    const shadow = this.attachShadow({ mode: 'closed' });
+                    const hwMsg = `Hello ${this.name}!`;
+
+                    shadow.append(
+                        document.getElementById('hello-world')
+                        .content.cloneNode(true));
+
+                    Array.from(shadow.querySelectorAll('slot.hw-text'))
+                    .forEach(n => n.assignedNodes()[0].textContent = hwMsg);
+
+                }
+            }
+
+            customElements.define('hello-world', HelloWorld);
+        </script>
+    </body>
+</html>
