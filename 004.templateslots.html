@@ -42,6 +42,10 @@
                     const shadow = this.attachShadow({ mode: 'closed' });
                     const hwMsg = `Hello ${this.name}!`;
 
+                    shadow.addEventListener('click', e => {
+                        console.log(e);
+                    });
+
                     shadow.append(
                         document.getElementById('hello-world')
                         .content.cloneNode(true));
