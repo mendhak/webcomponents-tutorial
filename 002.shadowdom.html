@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script type="text/javascript">
+            class HelloWorld extends HTMLElement {
+
+                constructor() { 
+                    super();
+                    this.name = "World";
+                }
+
+                // Which properties to observe, the rest get ignroed. 
+                static get observedAttributes() {
+                    return ['name'];
+                }
+
+                attributeChangedCallback(property, oldValue, newValue){
+                    console.log(property, oldValue, newValue);
+                    if (oldValue === newValue) { 
+                        return;
+                    }
+                    this[property] = newValue;
+                    this.connectedCallback();
+                }
+
+                connectedCallback() {
+                    const shadow = this.attachShadow({mode: 'closed'});
+
+                    shadow.innerHTML = `
+                        <style>
+                            p {
+                                text-align: center;
+                                font-weight: normal;
+                                padding: 1em; 
+                                margin: 0 0 2em 0;
+                                background-color: #eee;
+                                border: 1px solid #666;
+                            }
+                        </style>
+
+                        <p>Hello ${ this.name }!</p>
+                    `;
+
+                }
+            }
+
+            customElements.define('hello-world', HelloWorld);
+        </script>
+        <style type="text/css">
+            hello-world {
+                color: red;  /* This is applied */
+                font-weight: bolder; /* This is ignored */
+            }
+        </style>
+    </head>
+    <body>
+        <hello-world name="Dave" />
+    </body>
+</html>
