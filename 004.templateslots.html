@@ -39,11 +39,14 @@
                 }
 
                 connectedCallback(){
-                    const shadow = this.attachShadow({ mode: 'closed' });
+                    const shadow = this.attachShadow({ mode: 'open' });
                     const hwMsg = `Hello ${this.name}!`;
 
                     shadow.addEventListener('click', e => {
-                        console.log(e);
+                        this.name = "World!";
+                        // shadow.querySelector('slot.hw-text').textContent = `Hello ${this.name}`;
+                        this.shadowRoot.querySelector('slot.hw-text').assignedNodes()[0].textContent = 'New text';
+                        // console.log(shadow.querySelector('slot.hw-text'));
                     });
 
                     shadow.append(
