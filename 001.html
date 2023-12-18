@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script type="text/javascript">
+            class HelloWorld extends HTMLElement {
+                connectedCallback() {
+                    this.textContent = "Hello World!";
+                }
+            }
+
+            customElements.define('hello-world', HelloWorld);
+        </script>
+        <style type="text/css">
+            hello-world {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <hello-world />
+    </body>
+</html>
