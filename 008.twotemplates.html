@@ -1,0 +1,55 @@
+<html>
+<head>
+    <title>My HTML Document</title>
+</head>
+<body>
+
+<template id="book-template">
+    <li><span class="title"></span> &mdash; <span class="author"></span></li>
+</template>
+
+<template id="another-book-template">
+    <li><h3 class="title"></h3>
+    <p class="author" style="font-style: italic"></p></li>
+</template>
+
+<ul id="books"></ul>
+
+<fieldset id="radiobuttons">
+    <legend>Choose a template</legend>
+    <input type="radio" name="template" value="book-template" checked> Book Template<br>
+    <input type="radio" name="template" value="another-book-template"> Another Book Template<br>
+</fieldset>
+
+<script>
+
+    document.getElementById('radiobuttons').addEventListener('change', e => {
+        renderUsingTemplate(e.target.value);
+    });
+
+
+    function renderUsingTemplate(templateName="book-template"){
+        const fragment = document.getElementById(templateName);
+
+        const books = [
+            { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald' },
+            { title: 'A Farewell to Arms', author: 'Ernest Hemingway' },
+            { title: 'Catch 22', author: 'Joseph Heller' }
+        ];
+
+
+        document.getElementById('books').innerHTML = "";
+
+
+        books.forEach(book =>{
+            const instance = document.importNode(fragment.content, true);
+            instance.querySelector('.title').innerHTML = `<strong>${book.title}</strong>`;
+            instance.querySelector('.author').innerText = book.author;
+            document.getElementById('books').appendChild(instance);
+        });
+    }
+
+    
+</script>
+</body>
+</html>
