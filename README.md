@@ -1,5 +1,5 @@
-Following: https://kinsta.com/blog/web-components/
-
+Following: https://kinsta.com/blog/web-components/  
+Following: https://css-tricks.com/an-introduction-to-web-components/ 
 
 Testing: 
 

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My HTML Document</title>
+</head>
+<body>
+    <script>
+        class MyComponent extends HTMLElement {
+            connectedCallback(){
+                this.innerHTML = `<h1>Hello World.</h1>`;
+            }
+        }
+        customElements.define('my-component', MyComponent);
+    </script>
+
+    <my-component></my-component>
+</body>
+</html>
