@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>My HTML Document</title>
+</head>
+<body>
+
+<template id="book-template">
+    <li><span class="title"></span> &mdash; <span class="author"></span></li>
+</template>
+
+<ul id="books"></ul>
+
+<script>
+    const fragment = document.getElementById("book-template");
+
+    const books = [
+        { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald' },
+        { title: 'A Farewell to Arms', author: 'Ernest Hemingway' },
+        { title: 'Catch 22', author: 'Joseph Heller' }
+    ];
+
+    books.forEach(book =>{
+        const instance = document.importNode(fragment.content, true);
+        instance.querySelector('.title').innerHTML = `<strong>${book.title}</strong>`;
+        instance.querySelector('.author').innerText = book.author;
+        document.getElementById('books').appendChild(instance);
+    })
+</script>
+</body>
+</html>
