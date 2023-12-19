@@ -1,5 +1,7 @@
 <html lang="en" enctype="utf-8">
 <head>
+    <meta charset="UTF-8" />
+    <title>Hello World!</title>
     <style>#launch-dialog {
         background: tomato;
         border-radius: 4px;
@@ -13,19 +15,7 @@
 
 
     <template id="dialog-template">
-        <script>
-            document.getElementById('launch-dialog').addEventListener('click', () => {
-                const wrapper = document.querySelector('.wrapper');
-                const closeButton = document.querySelector('button.close');
-                const wasFocused = document.activeElement;
-                wrapper.classList.add('open');
-                closeButton.focus();
-                closeButton.addEventListener('click', () => {
-                    wrapper.classList.remove('open');
-                    wasFocused.focus();
-                });
-            });
-        </script>
+
         <style>
             .wrapper {
                 opacity: 0;
@@ -93,14 +83,89 @@
         </div>
     </template>
 
+    <one-dialog></one-dialog>
     <button id="launch-dialog">Launch dialog</button>
 
     <script>
-        const template = document.getElementById('dialog-template');
 
-        document.body.appendChild(
-            document.importNode(template.content, true)
-        );
+        class OneDialog extends HTMLElement {
+            constructor() {
+                super();
+                this.close = this.close.bind(this);
+                this._watchEscape = this._watchEscape.bind(this);
+            }
+
+            connectedCallback(){
+                const template = document.getElementById('dialog-template');
+                const node = document.importNode(template.content, true);
+                this.appendChild(node);
+
+                this.querySelector('button').addEventListener('click', this.close);
+                this.querySelector('.overlay').addEventListener('click', this.close);
+            }
+            
+            disconnectedCallback(){
+                this.querySelector('button').removeEventListener('click', this.close);
+                this.querySelector('.overlay').removeEventListener('click', this.close);
+            }
+
+            static getObservedAttributes(){
+                return ['open'];
+            }
+
+            attributeChangedCallback(attrName, oldValue, newValue){
+                if(newValue !== oldValue){
+                    this[attrName] = this.hasAttribute(attrName);
+                }
+            }
+
+            get open(){
+                return this.hasAttribute('open');
+            }
+
+            set open(isOpen){
+                this.querySelector(".wrapper").classList.toggle('open', isOpen);
+                this.querySelector('.wrapper').setAttribute('aria-hidden', !isOpen);
+
+                if(isOpen){
+                    this._wasFocused = document.activeElement;
+                    
+                    this.setAttribute('open', true);
+
+                    document.addEventListener('keydown', this._watchEscape);
+                    this.focus();
+                    this.querySelector('button').focus();
+                }
+                else {
+                    this._wasFocused && this._wasFocused.focus && this._wasFocused.focus();
+                    this.removeAttribute('open');
+                    document.removeEventListener('keydown', this._watchEscape);
+                    this.close();
+                }
+            }
+
+            close() {
+                if (this.open !== false) {
+                this.open = false;
+                }
+                const closeEvent = new CustomEvent('dialog-closed');
+                this.dispatchEvent(closeEvent);
+            }
+
+            _watchEscape(event) {
+                if (event.key === 'Escape') {
+                    this.close();   
+                }
+            }
+        }
+
+
+        customElements.define('one-dialog', OneDialog);
+
+    const button = document.getElementById('launch-dialog');
+    button.addEventListener('click', () => {
+    document.querySelector('one-dialog').open = true;
+    })
 
     </script>
 </body>
