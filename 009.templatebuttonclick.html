@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>My HTML Document</title>
+</head>
+<body>
+
+    <template id="button-template">
+        <button id="click-me">Click this button</button>
+        <style>
+            button {
+                all: unset;
+                background: tomato;
+                border: 0;
+                border-radius: 5px;
+                color: white;
+                font-family: sans-serif;
+                font-size: 1.5rem;
+                padding: 0.5rem;
+            }
+        </style>
+        <script>
+            document.getElementById('click-me').addEventListener('click', e=> alert(e));
+        </script>
+    </template>
+
+    <script>
+        const buttonTemplate = document.getElementById('button-template');
+        document.body.appendChild(document.importNode(buttonTemplate.content, true));
+    </script>
+
+</body>
+
+</html>
